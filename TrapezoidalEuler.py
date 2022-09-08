@@ -49,42 +49,42 @@ def main():
     
     fig.suptitle("Trapezoidal Euler Method graphs")
     
-    step = .2
+    step = .05
     
     ax[0, 0].set_ylabel("temperature of cup (Celcius)")
     ax[0, 0].set_xlabel("time elapsed (seconds)")
     ax[0, 0].set_title("h = 30")
-    ax[0, 0].plot(trapezoidalEuler(30, step))
+    ax[0, 0].plot(trapezoidalEuler(30, step), "o")
     
     ax[1, 0].set_ylabel("temperature of cup (Celcius)")
     ax[1, 0].set_xlabel("time elapsed (seconds)")
     ax[1, 0].set_title("h = 15")
-    ax[1, 0].plot(trapezoidalEuler(15, step))
+    ax[1, 0].plot(trapezoidalEuler(15, step), "o")
     
     ax[2, 0].set_ylabel("temperature of cup (Celcius)")
     ax[2, 0].set_xlabel("time elapsed (seconds)")
     ax[2, 0].set_title("h = 10")
-    ax[2, 0].plot(trapezoidalEuler(10, step))
+    ax[2, 0].plot(trapezoidalEuler(10, step), "o")
     
     ax[3, 0].set_ylabel("temperature of cup (Celcius)")
     ax[3, 0].set_xlabel("time elapsed (seconds)")
     ax[3, 0].set_title("h = 5")
-    ax[3, 0].plot(trapezoidalEuler(5, step))
+    ax[3, 0].plot(trapezoidalEuler(5, step), "o")
     
     ax[0, 1].set_ylabel("temperature of cup (Celcius)")
     ax[0, 1].set_xlabel("time elapsed (seconds)")
     ax[0, 1].set_title("h = 1")
-    ax[0, 1].plot(trapezoidalEuler(1, step))
+    ax[0, 1].plot(trapezoidalEuler(1, step), "o")
     
     ax[1, 1].set_ylabel("temperature of cup (Celcius)")
     ax[1, 1].set_xlabel("time elapsed (seconds)")
     ax[1, 1].set_title("h = .5")
-    ax[1, 1].plot(trapezoidalEuler(.5, step))
+    ax[1, 1].plot(trapezoidalEuler(.5, step), "o")
     
     ax[2, 1].set_ylabel("temperature of cup (Celcius)")
     ax[2, 1].set_xlabel("time elapsed (seconds)")
     ax[2, 1].set_title("h = .25")
-    ax[2, 1].plot(trapezoidalEuler(.25, step))
+    ax[2, 1].plot(trapezoidalEuler(.25, step), "o")
     
     # set the spacing between subplots
     plt.subplots_adjust(left=0.1,
