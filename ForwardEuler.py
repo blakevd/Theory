@@ -1,6 +1,5 @@
 # Blake Van Dyken
 
-from cProfile import label
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -20,7 +19,7 @@ def forwardEuler(cup_temps, h_values, g, l):
         cup_temps.append(prev_result)
     
     g.set_ylabel("temperature of cup (Celcius)")
-    g.set_xlabel("time passed in seconds")
+    g.set_xlabel("time elapsed (seconds)")
     g.set_title(l)
     g.plot(cup_temps, "-")
     
