@@ -39,8 +39,9 @@ def trapezoidalEuler(step, thresh):
                 y_n = forwardEulerEquation(y_n, T_room_start, h)
                 k+=1 # inc k
     
+    print(cup_values, "\nh = ", step, "\n")
     return cup_values  
-    # print(cup_values, "\ncount:", len(cup_values))
+
    
 def main():
     fig,ax = plt.subplots(4, 2)
