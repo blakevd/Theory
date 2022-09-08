@@ -33,7 +33,7 @@ def main():
     # GRAPH 1
     cup_temps = []
     h_values = np.arange(0, 301, 30) # create h values
-    print(h_values)
+
     forwardEuler(cup_temps, h_values, ax[0, 0], "h = 30s")
     
     # GRAPH 2
