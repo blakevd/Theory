@@ -21,11 +21,12 @@ def rng():
     return x_i/(M-1)
 
 def graph(g, title, data, real_data, num):
-    g.hist(data[:num - 1], bins = 10, range = [0,1], alpha = 0.25, color = 'blue', edgecolor = 'black', linewidth = 1)
-    g.hist(real_data[:num - 1], bins = 10, range = [0,1], alpha = 0.25, color = 'red', edgecolor = 'black', linewidth = 1)
+    g.hist(data[:num - 1], bins = 10, range = [0,1], alpha = 0.25, color = 'blue', edgecolor = 'black', linewidth = 1, label = 'custom rng')
+    g.hist(real_data[:num - 1], bins = 10, range = [0,1], alpha = 0.25, color = 'red', edgecolor = 'black', linewidth = 1, label = 'built-in rng')
     g.set_title("n = " + str(num - 1))
     g.set_xlabel("bins")
     g.set_ylabel("number of random numbers in a bin")
+    g.legend()
     
 def main():
     fig,ax = plt.subplots(3, 2)
