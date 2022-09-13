@@ -2,6 +2,7 @@
 
 import sys
 import numpy as np
+from numpy import log as ln
 import matplotlib.pyplot as plt
 import random
 
@@ -23,18 +24,16 @@ def rng():
 def MonteCarlo(Fx_sum, n, r):
     a = 0
     b = 1
-    Tr = a + ((b - a)/(M - 1)) * r
-    Fx = np.log(Tr**2) * np.log((1-Tr)**2)
-    print(Tr)
+    Tr = a + ((b - a)/(1 - 0)) * r # max r is 1 min r is 0
+    Fx = (2*ln(Tr)) * (2*ln((1-Tr))) # ln(a^b) = b*ln(a)
+    
     return ((b - a) / n) * (Fx_sum + Fx), (Fx_sum + Fx)
     
 def main():
     prev = 0
-    for n in range(99):
+    for n in range(1000):
         result, value = MonteCarlo(prev, n+1, rng())
-        #print(result, value)
+        print(result)
         prev = value
         
-    
-    
 main()
