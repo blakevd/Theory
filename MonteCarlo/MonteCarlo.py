@@ -20,7 +20,9 @@ def rng():
     x_i = (a * x_i + c) % (M - 1) 
     return x_i/(M-1)
 
-# Solving for f(x) = ln(x^2)*ln((1 - x)^2) = 1.42...
+# r = random number
+# n = integral approx step
+# Fx_sum = sum of prev values calculated
 def MonteCarlo(Fx_sum, n, r):
     a = 0
     b = 1
@@ -28,12 +30,52 @@ def MonteCarlo(Fx_sum, n, r):
     Fx = (2*ln(Tr)) * (2*ln((1-Tr))) # ln(a^b) = b*ln(a)
     
     return ((b - a) / n) * (Fx_sum + Fx), (Fx_sum + Fx)
-    
+
+# Graph helper function
+def graph(g, title, data, real_data, num):
+    g.plot(data[:num - 1], alpha = 0.25, color = 'blue')
+    g.plot(real_data[:num - 1], alpha = 0.25, color = 'red')
+    g.set_title("n = " + str(num - 1))
+    g.set_xlabel("steps (n)")
+    g.set_ylabel("Integral Approximation after n steps")
+
+# Solving for f(x) = ln(x^2)*ln((1 - x)^2) = 1.42...  
 def main():
+    fig,ax = plt.subplots(3, 2)
+    fig.delaxes(ax[2, 1])
+    fig.suptitle("Monte Carlo Graphs")
+    
+    data = [] 
+    result = 0
     prev = 0
-    for n in range(1000):
+    # result for my RNG method
+    for n in range(1000000):
         result, value = MonteCarlo(prev, n+1, rng())
-        print(result)
+        data.append(result)
         prev = value
+        
+    real_data = []
+    result = 0
+    prev = 0
+    # result for built in RNG method
+    for n in range(1000000):
+        result, value = MonteCarlo(prev, n+1, random.random())
+        real_data.append(result)
+        prev = value
+        
+    graph(ax[0,0], "n = 100", data, real_data, 100)
+    graph(ax[0,1], "n = 1000", data, real_data, 1000)
+    graph(ax[1,0], "n = 10000", data, real_data, 10000)
+    graph(ax[2,0], "n = 100000", data, real_data, 100000)
+    graph(ax[1,1], "n = 1000000", data, real_data, 1000000)
+    
+    # set the spacing between subplots
+    plt.subplots_adjust(left=0.1,
+                        bottom=0.1, 
+                        right=0.9, 
+                        top=0.9, 
+                        wspace=0.4, 
+                        hspace=0.4)
+    plt.show()
         
 main()
