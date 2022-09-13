@@ -17,7 +17,7 @@ x_i = 29089675 # seed
 # Generates a random number based on the seed between 0 and 1
 def rng():
     global x_i
-    x_i = (a * x_i + c) % M
+    x_i = (a * x_i + c) % (M-1)
     return x_i/(M-1)
 
 def graph(g, title, data, real_data, num):
