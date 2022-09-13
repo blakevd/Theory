@@ -10,6 +10,8 @@ M = sys.maxsize - 1
 a = 16807
 c = 0
 
+graph_answer = np.repeat(1.42026373, 1000000)
+
 # Change this seed if you want different numbers
 x_i = 13 # seed
 
@@ -33,8 +35,9 @@ def MonteCarlo(Fx_sum, n, r):
 
 # Graph helper function
 def graph(g, title, data, real_data, num):
-    g.plot(data[:num - 1], alpha = 0.25, color = 'blue')
-    g.plot(real_data[:num - 1], alpha = 0.25, color = 'red')
+    g.plot(data[:num - 1], alpha = 0.25, color = 'blue') # graph custom rng points
+    g.plot(real_data[:num - 1], alpha = 0.25, color = 'red') # graph actual rng points
+    g.plot(graph_answer[:num - 1], alpha = 0.25, color = 'green') # graph answer line
     g.set_title("n = " + str(num - 1))
     g.set_xlabel("steps (n)")
     g.set_ylabel("Integral Approximation after n steps")
