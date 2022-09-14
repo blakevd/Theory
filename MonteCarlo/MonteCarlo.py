@@ -60,13 +60,13 @@ def main():
         prev = value
         
     real_data = []
-    result = 0
-    prev = 0
+    result2 = 0
+    prev2 = 0
     # result for built in RNG method
-    for n in range(1000000):
-        result, value = MonteCarlo(prev, n+1, random.random())
-        real_data.append(result)
-        prev = value
+    for x in range(1000000):
+        result2, value2 = MonteCarlo(prev2, x+1, random.random())
+        real_data.append(result2)
+        prev2 = value2
         
     graph(ax[0,0], "n = 100", data, real_data, 100)
     graph(ax[0,1], "n = 1000", data, real_data, 1000)
