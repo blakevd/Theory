@@ -14,7 +14,7 @@ c = 0
 graph_answer = np.repeat(8 - ((2*math.pi**2)/3), 1000000)
 
 # Change this seed if you want different numbers
-x_i = 13 # seed
+x_i = 29089675 # seed
 
 # Linear congruential RNG
 # Generates a random number based on the seed between 0 and 1
