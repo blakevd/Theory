@@ -8,19 +8,17 @@ import random
 import math
 
 M = sys.maxsize - 1
-a = 16807
-c = 0
 
 graph_answer = np.repeat(8 - ((2*math.pi**2)/3), 1000000)
 
 # Change this seed if you want different numbers
-x_i = 29089675 # seed
+x_i = 13 # seed
 
 # Linear congruential RNG
 # Generates a random number based on the seed between 0 and 1
 def rng():
     global x_i
-    x_i = (a * x_i + c) % (M - 1) 
+    x_i = (2 * x_i + x_i) % (M-1)
     return x_i/(M-1)
 
 # r = random number

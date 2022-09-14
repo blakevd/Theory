@@ -7,8 +7,6 @@ import matplotlib.pyplot as plt
 import random
 
 M = sys.maxsize - 1
-a = 16807
-c = 0
 
 # Change this seed if you want different numbers
 x_i = 29089675 # seed
@@ -17,7 +15,7 @@ x_i = 29089675 # seed
 # Generates a random number based on the seed between 0 and 1
 def rng():
     global x_i
-    x_i = (a * x_i + c) % (M-1)
+    x_i = (2 * x_i + x_i) % (M-1)
     return x_i/(M-1)
 
 # Graph helper function
@@ -36,12 +34,14 @@ def main():
     data = []
     data2 = [] # for y axis of scatterplot
     real_data = []
+    real_data2 = []
     
     # create array of random values from 0 to 1000000
     for i in range(1000000):
         data.append(rng())
         data2.append(rng())
         real_data.append(random.random())
+        real_data2.append(random.random())
     # GRAPH
 
     graph(ax[0,0], "n = 100", data, real_data, 100)
@@ -49,7 +49,10 @@ def main():
     graph(ax[1,0], "n = 10000", data, real_data, 10000)
     graph(ax[2,0], "n = 100000", data, real_data, 100000)
     graph(ax[1,1], "n = 1000000", data, real_data, 1000000)
-     
+    
+    ax[2,1].scatter(data, data2, color='blue', alpha=0.25)
+    ax[2,1].scatter(real_data, real_data2, color='red', alpha=0.25)
+    
     # set the spacing between subplots
     plt.subplots_adjust(left=0.1,
                         bottom=0.1, 
