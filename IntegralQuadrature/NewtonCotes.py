@@ -1,6 +1,7 @@
 # Blake Van Dyken
 
 from email.charset import BASE64
+from pickle import TRUE
 from time import perf_counter
 import numpy as np
 import matplotlib.pyplot as plt
@@ -71,7 +72,7 @@ def QuadraticInterpolant(N, a, b, function):
     Rel_Error_Data = []
     Per_Error_Data = []
     
-    for i in range(1, (2*N+1) + 1, 1): # N + 1 because range end is exclusive
+    for i in range(1, (N+1) + 1, 1): # N + 1 because range end is exclusive
         delta_x = (b - a) / (2 * N)
         x_i = a + (i - 1) * delta_x
         
@@ -143,13 +144,18 @@ def GuassianQuadrature(N, a, b, function):
         w_i3 = (322 - 13 * np.sqrt(70)) / 900
         
         sum = w_i*function(Helper(x_i)) + w_i2*function(Helper(x_i2)) + w_i2*function(Helper(x_i2_neg)) + w_i3*function(Helper(x_i3)) + w_i3*function(Helper(x_i3_neg))
-    return (b - a) / 2 * sum
+    
+    result = (b - a) / 2 * sum
+    return result, TRUE_ANS - result * 100
 
 # Helper function to graph all three methods
 def helpGraph(ax, data, title, xlab, ylab):
-    ax.plot(data[0], color = "red", alpha = 0.25, label = "constant")
-    ax.plot(data[1], color = "green",  alpha = 0.25, label = "linear")
-    ax.plot(data[2], color = "blue",  alpha = 0.25, label = "quadratic")
+    if (len(data) == 3): # plot newton cotes
+        ax.plot(data[0], color = "red", alpha = 0.35, label = "constant")
+        ax.plot(data[1], color = "green",  alpha = 0.35, label = "linear")
+        ax.plot(data[2], color = "blue",  alpha = 0.35, label = "quadratic")
+    else: # plot guassian
+        ax.plot(data, color = "red", alpha = 0.35, label = "guassian")
     ax.legend()
     ax.set_title(title)
     ax.set_ylabel(ylab)
@@ -169,16 +175,29 @@ def main():
     lin, linData, lin_ABS_Error_Data, lin_Rel_Error_Data, lin_Per_Error_Data = LinearInterpolant(N, a, b, Integral)
     quad, quadData, quad_ABS_Error_Data, quad_Rel_Error_Data, quad_Per_Error_Data = QuadraticInterpolant(N, a, b, Integral)
     
+    guass_Perc_Error_Data = []
+    # find guassian quadrature for N=2 to 5
+    for n in guass_N:
+        guass, data = GuassianQuadrature(n, a, b, Integral)
+        guass_Perc_Error_Data.append(data)
+        # print("N = ", n, " guass = ", guass)
+    
     # Basic True ans Graphs
     helpGraph(ax[0, 0], [constData, linData, quadData], "Graph of Approximations at N", "N", "Approximation at N")
     
     # ABS Error Graphs
     helpGraph(ax[0, 1], [const_ABS_Error_Data, lin_ABS_Error_Data, quad_ABS_Error_Data], "Graph of ABS Error", "N", "Approx. ABS Error")
     
-    # find guassian quadrature for N=2 to 5
-    for n in guass_N:
-        guass = GuassianQuadrature(n, a, b, Integral)
-        print("N = ", n, " guass = ", guass)
+    # Rel Error Graphs
+    helpGraph(ax[1, 0], [const_Rel_Error_Data, lin_Rel_Error_Data, quad_Rel_Error_Data], "Graph of Relative Error", "N", "Approx. Rel. Error")
+    
+    # Percent Error Graphs
+    helpGraph(ax[1, 1], [const_Per_Error_Data, lin_Per_Error_Data, quad_Per_Error_Data], "Graph of Percent Error", "N", "% Error")
+
+    # Guassian True Error graph
+    helpGraph(ax[2, 1], guass_Perc_Error_Data, "Graph of Percent Error", "N", "% Error")
+
+    # Guassian Perc Error graph
     
     plt.show()
     
