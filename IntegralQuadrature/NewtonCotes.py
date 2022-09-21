@@ -72,7 +72,7 @@ def QuadraticInterpolant(N, a, b, function):
     Rel_Error_Data = []
     Per_Error_Data = []
     
-    for i in range(1, (N+1) + 1, 1): # N + 1 because range end is exclusive
+    for i in range(1, (2*N+1) + 1, 1): # N + 1 because range end is exclusive
         delta_x = (b - a) / (2 * N)
         x_i = a + (i - 1) * delta_x
         
@@ -175,6 +175,7 @@ def main():
     lin, linData, lin_ABS_Error_Data, lin_Rel_Error_Data, lin_Per_Error_Data = LinearInterpolant(N, a, b, Integral)
     quad, quadData, quad_ABS_Error_Data, quad_Rel_Error_Data, quad_Per_Error_Data = QuadraticInterpolant(N, a, b, Integral)
     
+    print("True ans: ", TRUE_ANS)
     print("Constant ans: ", const)
     print("Linear ans: ", lin)
     print("Quadratic ans: ", quad)
