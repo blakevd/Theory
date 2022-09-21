@@ -155,7 +155,7 @@ def helpGraph(ax, data, title, xlab, ylab):
         ax.plot(data[1], color = "green",  alpha = 0.35, label = "linear")
         ax.plot(data[2], color = "blue",  alpha = 0.35, label = "quadratic")
     else: # plot guassian
-        ax.plot(data, color = "red", alpha = 0.35, label = "guassian")
+        ax.plot([2,3,4,5], data, color = "red", alpha = 0.35, label = "guassian")
     ax.legend()
     ax.set_title(title)
     ax.set_ylabel(ylab)
