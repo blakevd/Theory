@@ -146,7 +146,7 @@ def GuassianQuadrature(N, a, b, function):
         sum = w_i*function(Helper(x_i)) + w_i2*function(Helper(x_i2)) + w_i2*function(Helper(x_i2_neg)) + w_i3*function(Helper(x_i3)) + w_i3*function(Helper(x_i3_neg))
     
     result = (b - a) / 2 * sum
-    return result, TRUE_ANS - result * 100
+    return result, (TRUE_ANS - result)/result * 100
 
 # Helper function to graph all three methods
 def helpGraph(ax, data, title, xlab, ylab):
@@ -175,12 +175,16 @@ def main():
     lin, linData, lin_ABS_Error_Data, lin_Rel_Error_Data, lin_Per_Error_Data = LinearInterpolant(N, a, b, Integral)
     quad, quadData, quad_ABS_Error_Data, quad_Rel_Error_Data, quad_Per_Error_Data = QuadraticInterpolant(N, a, b, Integral)
     
-    guass_Perc_Error_Data = []
+    print("Constant ans: ", const)
+    print("Linear ans: ", lin)
+    print("Quadratic ans: ", quad)
     # find guassian quadrature for N=2 to 5
+    guassData, guass_Perc_Error_Data = [], []
     for n in guass_N:
         guass, data = GuassianQuadrature(n, a, b, Integral)
+        guassData.append(guass)
         guass_Perc_Error_Data.append(data)
-        # print("N = ", n, " guass = ", guass)
+        print("N = ", n, " guass = ", guass)
     
     # Basic True ans Graphs
     helpGraph(ax[0, 0], [constData, linData, quadData], "Graph of Approximations at N", "N", "Approximation at N")
@@ -195,10 +199,12 @@ def main():
     helpGraph(ax[1, 1], [const_Per_Error_Data, lin_Per_Error_Data, quad_Per_Error_Data], "Graph of Percent Error", "N", "% Error")
 
     # Guassian True Error graph
+    helpGraph(ax[2, 0], guassData, "Graph of Approximations at N", "N", "Approximation at N")
+    
+    # Guassian Perc Error graph
     helpGraph(ax[2, 1], guass_Perc_Error_Data, "Graph of Percent Error", "N", "% Error")
 
-    # Guassian Perc Error graph
-    
+    plt.subplots_adjust(hspace=0.35)
     plt.show()
     
 main()
