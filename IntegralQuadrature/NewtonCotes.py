@@ -1,13 +1,25 @@
 # Blake Van Dyken
 
+from email.charset import BASE64
+from time import perf_counter
 import numpy as np
 import matplotlib.pyplot as plt
+
+# global vars
+TRUE_ANS = 6.305171
 
 def Integral(x):
     return 1 + np.sin(x) * np.cos((2*x)/2)*np.sin(4*x)
 
+# Composite midpoint rule
 def ConstantInterpolant(N, a, b, function):
+    global TRUE_ANS
     sum = 0
+    data = [0]
+    ABS_Error_Data = [0]
+    Rel_Error_Data = [0]
+    Per_Error_Data = [0]
+    
     for i in range(1, N + 1, 1): # N + 1 because range end is exclusive
         delta_x = (b - a) / N
         x_i = a + (i - .5) * delta_x
@@ -15,10 +27,23 @@ def ConstantInterpolant(N, a, b, function):
         w_i = delta_x
         sum += w_i * function(x_i)
         
-    return sum
+        # data for charts
+        data.append(sum)
+        err = TRUE_ANS - sum
+        ABS_Error_Data.append(err)
+        Rel_Error_Data.append(err/TRUE_ANS)
+        Per_Error_Data.append(err/TRUE_ANS * 100)
+        
+    return sum, data, ABS_Error_Data, Rel_Error_Data, Per_Error_Data
 
+# composite trapezoid rule
 def LinearInterpolant(N, a, b, function):
     sum = 0
+    data = [0]
+    ABS_Error_Data = [0]
+    Rel_Error_Data = [0]
+    Per_Error_Data = [0]
+    
     for i in range(1, N + 1, 1): # N + 1 because range end is exclusive
         delta_x = (b - a) / (N - 1)
         x_i = a + (i - 1) * delta_x
@@ -29,10 +54,23 @@ def LinearInterpolant(N, a, b, function):
         
         sum += w_i * function(x_i)
         
-    return sum
+        # data for charts
+        data.append(sum)
+        err = TRUE_ANS - sum
+        ABS_Error_Data.append(err)
+        Rel_Error_Data.append(err/TRUE_ANS)
+        Per_Error_Data.append(err/TRUE_ANS * 100)
+        
+    return sum, data, ABS_Error_Data, Rel_Error_Data, Per_Error_Data
 
+# composite simpson formula
 def QuadraticInterpolant(N, a, b, function):
     sum = 0
+    data = [0]
+    ABS_Error_Data = [0]
+    Rel_Error_Data = [0]
+    Per_Error_Data = [0]
+    
     for i in range(1, (2*N+1) + 1, 1): # N + 1 because range end is exclusive
         delta_x = (b - a) / (2 * N)
         x_i = a + (i - 1) * delta_x
@@ -45,15 +83,23 @@ def QuadraticInterpolant(N, a, b, function):
             
         sum += w_i * function(x_i)
         
-    return sum
+        # data for charts
+        data.append(sum)
+        err = TRUE_ANS - sum
+        ABS_Error_Data.append(err)
+        Rel_Error_Data.append(err/TRUE_ANS)
+        Per_Error_Data.append(err/TRUE_ANS * 100)
+        
+    return sum, data, ABS_Error_Data, Rel_Error_Data, Per_Error_Data
 
+# Guassian Quadrature for finding x_i and w_i
 def GuassianQuadrature(N, a, b, function):
     def Helper(x_i): # value we pass to function
         return ((b-a)/2)*x_i + (a+b)/2
     
-    # for N = 1
     sum = 0
     
+    # All below is taken from the Gauss-Legendre Quadrature Table
     if(N == 1):
         x_i = 0
         w_i = 2
@@ -99,25 +145,39 @@ def GuassianQuadrature(N, a, b, function):
         sum = w_i*function(Helper(x_i)) + w_i2*function(Helper(x_i2)) + w_i2*function(Helper(x_i2_neg)) + w_i3*function(Helper(x_i3)) + w_i3*function(Helper(x_i3_neg))
     return (b - a) / 2 * sum
 
-def example(x):
-    return 2*x**2 + x + 1
+# Helper function to graph all three methods
+def helpGraph(ax, data, xlab, ylab):
+    ax.plot(data[0], color = "red", alpha = 0.25, label = "constant")
+    ax.plot(data[1], color = "green",  alpha = 0.25, label = "linear")
+    ax.plot(data[2], color = "blue",  alpha = 0.25, label = "quadratic")
+    ax.legend()
+    ax.set_ylabel(ylab)
+    ax.set_xlabel(xlab)
 
 def main():
+    fig,ax = plt.subplots(3, 2)
+    fig.suptitle("Integral Quadrature Graphs")
+    
     a = 0
     b = 2*np.pi
     N = 1024
     guass_N = [2,3,4,5]
     
-    const = ConstantInterpolant(N, a, b, Integral)
-    lin = LinearInterpolant(N, a, b, Integral)
-    quad = QuadraticInterpolant(N, a, b, Integral)
+    # find newton cotes for n = 1024 and get chart data for each
+    const, constData, const_ABS_Error_Data, const_Rel_Error_Data, const_Per_Error_Data = ConstantInterpolant(N, a, b, Integral)
+    lin, linData, lin_ABS_Error_Data, lin_Rel_Error_Data, lin_Per_Error_Data = LinearInterpolant(N, a, b, Integral)
+    quad, quadData, quad_ABS_Error_Data, quad_Rel_Error_Data, quad_Per_Error_Data = QuadraticInterpolant(N, a, b, Integral)
     
-    print(const)
-    print(lin)
-    print(quad)
+    # Basic True ans Graphs
+    helpGraph()
     
+    # ABS Error Graphs
+
+    # find guassian quadrature for N=2 to 5
     for n in guass_N:
         guass = GuassianQuadrature(n, a, b, Integral)
         print("N = ", n, " guass = ", guass)
+    
+    plt.show()
     
 main()
