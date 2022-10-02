@@ -1,7 +1,0 @@
-# Blake Van Dyken
-
-import numpy as np
-import matplotlib.pyplot as plt
-
-def StirlingsApprox(n):
-    equation = np.sqrt(2*np.pi*n) * (n / np.e)**n
