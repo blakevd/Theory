@@ -26,7 +26,7 @@ def extraCred(n):
 def main():
     n = [10, 100, 1000, 10000]
     for v in n:
-        print('n = ', n, ' : ', extraCred(v))
+        print('n = ', v, ' : ', extraCred(v))
     
     print("\nExtra Credit Problem: \n")
     
