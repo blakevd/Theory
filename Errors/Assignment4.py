@@ -110,15 +110,18 @@ def Chudnovsky():
         # store error
         abs_error.append(np.abs(np.pi - pi_approx))
         exp = -(2)**n+1
-        abs_BigO.append(10**exp)
+        res = 10**exp
+        abs_BigO.append(res)
+        print("approx: ", pi_approx)
+        print("abs: ", abs_error[len(abs_error) - 1], " < ", res)
         
     plt.figure()
-    plt.plot(abs_error, "ro", alpha = 0.15)
-    plt.plot(abs_BigO, "go", alpha = 0.15)
+    plt.plot(abs_error, "ro", alpha = 0.15, label="abs")
+    plt.plot(abs_BigO, "go", alpha = 0.15, label="upper bound")
     plt.title("ABS Error of approx. pi using Chudnovsky")
     plt.ylabel("Approximate pi_nth Value")
-    plt.xlabel("Number of expansion terms used")
-
+    plt.xlabel("N")
+    plt.legend()
 
 def main():
     StirlingGraph()
