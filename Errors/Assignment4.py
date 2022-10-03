@@ -88,6 +88,10 @@ def ApproxPiOverFour():
     plt.plot([actual, actual], [tan_i[0], tan_i[len(tan_i) - 1]])
     plt.xlabel("Approximate Expansion Value")
     plt.ylabel("Number of expansion terms used")
+    
+    last_term = tan_expansion_terms[len(tan_expansion_terms) - 1]
+    print("rate of convergence: ", countAccurateDecimals(last_term, actual) / last_term)
+    
 
 def Chudnovsky():
     x = np.sqrt(2)
@@ -107,7 +111,6 @@ def Chudnovsky():
         abs_error.append(np.abs(np.pi - pi_approx))
         exp = -(2)**n+1
         abs_BigO.append(10**exp)
-        print(abs_error[n-1], abs_BigO[n-1])
         
     plt.figure()
     plt.plot(abs_error, "ro", alpha = 0.15)
