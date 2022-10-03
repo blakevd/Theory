@@ -1,7 +1,5 @@
 # Blake Van Dyken
 
-from re import X
-from unicodedata import decimal
 import numpy as np
 import matplotlib.pyplot as plt
 from decimal import *
@@ -92,7 +90,6 @@ def ApproxPiOverFour():
     last_term = tan_expansion_terms[len(tan_expansion_terms) - 1]
     print("rate of convergence: ", countAccurateDecimals(last_term, actual) / last_term)
     
-
 def Chudnovsky():
     x = np.sqrt(2)
     pi_approx = (2 + x)
@@ -128,5 +125,5 @@ def main():
     ApproxPiOverFour()
     Chudnovsky()
     plt.show()
-    
+
 main()
