@@ -78,7 +78,7 @@ def ApproxPiOverFour():
     tan_i = []
     actual = 0.78539816339
     
-    for i in range(4, 100004):
+    for i in range(4, 10004):
         approx = arcTanExpansion(i)
         tan_i.append(i)
         tan_expansion_terms.append(approx)
@@ -112,7 +112,9 @@ def Chudnovsky():
     plt.figure()
     plt.plot(abs_error, "ro", alpha = 0.15)
     plt.plot(abs_BigO, "go", alpha = 0.15)
-
+    plt.title("ABS Error of approx. pi using Chudnovsky")
+    plt.ylabel("Approximate pi_nth Value")
+    plt.xlabel("Number of expansion terms used")
 
 
 def main():
