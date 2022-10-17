@@ -16,24 +16,25 @@ def stencil(u_prev, u, u_next, dx):
 
 def graphThermalDiff(N, delta_t, total_time):
     delta_x = L / (N-1)
-    values = []
+    
+    # list of all u_i items
+    values = np.ones(N)*initTemp
+    
+    # time step
     times = np.arange(0.0, total_time + delta_t, delta_t)
+    
     for t in times:
-        if t == 0.0:
-            values.append(startTemp)
-        elif t == total_time:
-            values.append(endTemp)
-        else:
-            if t == delta_t: # first item
-                values.append(a * delta_t * stencil(startTemp, initTemp, initTemp, delta_x) + initTemp)
-            elif t == total_time - delta_t: # second to last item
-                values.append(a * delta_t * stencil(initTemp, initTemp, endTemp, delta_x) + initTemp)
+        for i in range(0, N):     
+            if i == 0:
+                values[i] = (startTemp)
+            elif i == N-1:
+                values[i] = (endTemp)
             else:
-                values.append(a * delta_t * stencil(initTemp, initTemp, initTemp, delta_x) + initTemp)
+                values[i] = (a * delta_t * stencil(values[i-1], values[i], values[i+1], delta_x) + initTemp)
 
     plt.figure()        
-    plt.plot(times, values, "o")
-    plt.plot(times, values, "g")
+    plt.plot(values, "o")
+    plt.plot(values, "g")
     title = "Graph for N = ", N, " and delta t = ", delta_t
     plt.title(title)
     plt.xlabel("Time(seconds)")
