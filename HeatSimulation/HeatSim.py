@@ -36,8 +36,8 @@ def graphThermalDiff(N, delta_t, total_time):
     plt.plot(times, values, "g")
     title = "Graph for N = ", N, " and delta t = ", delta_t
     plt.title(title)
-    plt.xlabel("Time")
-    plt.ylabel("Temperature")
+    plt.xlabel("Time(seconds)")
+    plt.ylabel("Temperature(Celcius)")
 
 def main():
     total_time = 5.0
