@@ -33,6 +33,7 @@ def graphThermalDiff(N, delta_t, total_time):
 
     plt.figure()        
     plt.plot(times, values, "o")
+    plt.plot(times, values, "g")
     title = "Graph for N = ", N, " and delta t = ", delta_t
     plt.title(title)
     plt.xlabel("Time")
