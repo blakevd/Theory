@@ -20,11 +20,8 @@ def graphThermalDiff(N, delta_t, total_time):
     # list of all u_i items
     values = np.ones(N)*initTemp
     
-    # time step
-    times = np.arange(0.0, total_time + delta_t, delta_t)
-    
-    for t in times:
-        for i in range(0, N):     
+    for t in np.arange(0.0, total_time + delta_t, delta_t):
+        for i in range(0, N):  
             if i == 0:
                 values[i] = (startTemp)
             elif i == N-1:
@@ -33,8 +30,9 @@ def graphThermalDiff(N, delta_t, total_time):
                 values[i] = (a * delta_t * stencil(values[i-1], values[i], values[i+1], delta_x) + initTemp)
 
     plt.figure()        
-    plt.plot(values, "o")
-    plt.plot(values, "g")
+    normal = np.arange(0, N) / N * total_time
+    plt.plot(normal, values, "o")
+    plt.plot(normal, values, "g")
     title = "Graph for N = ", N, " and delta t = ", delta_t
     plt.title(title)
     plt.xlabel("Time(seconds)")
