@@ -14,5 +14,7 @@ def MatMatDirect(A,B):
         for i in range(m):
             for k in range(p):
                 C[i,j] = C[i,j] + A[i,k] * B[k,j]
+                if time.time() - start > 300:
+                    return C, 10*60
 
     return C, time.time() - start

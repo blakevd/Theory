@@ -13,5 +13,7 @@ def MatMatVec(A,B):
     C = zeros((m,n))
     for j in range(n):
         C[:,j] = C[:,j] + dot(A, B[:,j])
+        if time.time() - start > 300:
+                    return C, 10*60
 
     return C, time.time() - start

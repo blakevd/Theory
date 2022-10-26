@@ -14,5 +14,7 @@ def MatMatSaxpy(A,B):
     for j in range(n):
         for k in range(m):
             C[:,j] = C[:,j] + A[:,k] * B[k,j]
+            if time.time() - start > 300:
+                    return C, 10*60
         
     return C, time.time() - start

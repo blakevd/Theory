@@ -45,7 +45,12 @@ for current_size in sizes:
     B = random.random((p,n))   # B is p x n
     
     print("n = ", current_size)
+    pythonMat(A,B)
+    matLabMat(A,B)
+    innerMat(A,B)
+    outerMat(A,B)
     saxpyMat(A,B)
+    vectorMat(A,B)
     
 # Find tha maximum absolute current_size in C
 # maxval = fabs(C).max()

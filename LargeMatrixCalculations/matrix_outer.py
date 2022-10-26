@@ -12,5 +12,7 @@ def MatMatOuter(A, B):
     C = zeros((m,n))
     for k in range(p):
         C = C + outer(A[:,k],B[k,:])
+        if time.time() - start > 300:
+                    return C, 10*60
 
     return C, time.time() - start

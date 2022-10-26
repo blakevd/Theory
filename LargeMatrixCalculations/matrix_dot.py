@@ -14,5 +14,7 @@ def MatMatDot(A, B):
     for j in range(n):
         for i in range(m):
             C[i,j] = dot(A[i,:],B[:,j])
+            if time.time() - start > 300:
+                    return C, 10*60
 
     return C, time.time() - start
