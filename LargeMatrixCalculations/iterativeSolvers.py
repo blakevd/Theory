@@ -89,11 +89,14 @@ def SuccesiveOverRelaxation(A, b, K, tolerance):
 def main():
     A = readMatrixFile("A1.matrix", 793)
     b = readRHSFile("b1.rhs", 793)
-    max_iterations = 100
+    max_iterations = 250
     tol = 0.000001 # beause my pc is too slow
     #A = np.array([[4.0, -2.0, 1.0], [1.0, -3.0, 2.0], [-1.0, 2.0, 6.0]])
     #b = [1.0, 2.0, 3.0]
-
+    # direct method solver
+    direct = np.linalg.solve(A, b)
+    print('direct method solution(numpy): ', direct)
+    
     jx, je, jt = jacobi(A, b, max_iterations, tol)
     gx, ge, gt = guassSeidel(A, b, max_iterations, tol)
     sx, se, st = SuccesiveOverRelaxation(A,b,max_iterations, tol)
