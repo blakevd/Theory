@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib as plt
 
 # reads in sparse matrix and stores as a 2D array
 def readMatrixFile(file, matrix_size):
@@ -15,29 +16,36 @@ def readRHSFile(file, b_size):
     for line in f:
         values = line.split(" ")
         b[int(values[0]) - 1] = float(values[1])
-
+    
     return np.array(b)
 
 # solves Ax = b jacobis method
-def jacobi(A, b, K):
+def jacobi(A, b, K, tolerance):
     n = len(b)
     x = np.zeros_like(b)
-    
+    e = []
     for k in range(K): # very very slow method for large matrix
-        prev_x = x
+        prev_x = x.copy()
         for i in range(n):
             sum = 0.0
             for j in range(n):
                 if j != i:
                     sum += np.dot(A[i][j], x[j])
             x[i] = (b[i] - sum) / float(A[i][i])
-    return x
+        # check tolerance based on https://johnfoster.pge.utexas.edu/numerical-methods-book/LinearAlgebra_IterativeSolvers.html
+        error = np.abs(np.linalg.norm(x) - np.linalg.norm(prev_x))
+        e.append(error)
+        if error < tolerance:
+            break
+    return x, e
 
-def guassSeidel(A, b, K):
+def guassSeidel(A, b, K, tolerance):
     n = len(b)
     x = np.zeros_like(b)
-    
+    e = []
+
     for k in range(K):
+        prev_x = x.copy()
         for i in range(n):
             sum = 0.0
             for j in range(i - 1):
@@ -46,32 +54,46 @@ def guassSeidel(A, b, K):
                 sum += np.dot(A[i][j], x[j])
                 
             x[i] = (b[i]-sum) / float(A[i][i])
-    
-    return x
+        error = np.abs(np.linalg.norm(x) - np.linalg.norm(prev_x))
+        e.append(error)
+        if error < tolerance:
+            break
+    return x, e
 
-def SuccesiveOverRelaxation(A, b, K):
+def SuccesiveOverRelaxation(A, b, K, tolerance):
     n = len(b)
     x = np.zeros_like(b)
     w = 1.05
-    
+    e = []
     for k in range(K):
+        prev_x = x.copy()
         for i in range(n):
             sum = 0.0
             for j in range(n):
                 if j != i:
                     sum += np.dot(A[i][j], x[j])
             x[i] = x[i] + w*((b[i]-sum) / float(A[i][i])) - x[i]
-    
+        error = np.abs(np.linalg.norm(x) - np.linalg.norm(prev_x))
+        e.append(error)
+        if error < tolerance:
+            break
     return x
 
 def main():
     A = readMatrixFile("A1.matrix", 793)
     b = readRHSFile("b1.rhs", 793)
     max_iterations = 25
+    tol = 1e-10
     #A = np.array([[4.0, -2.0, 1.0], [1.0, -3.0, 2.0], [-1.0, 2.0, 6.0]])
     #b = [1.0, 2.0, 3.0]
 
-    print(jacobi(A, b, max_iterations))
-    print(guassSeidel(A, b, max_iterations))
-    print(SuccesiveOverRelaxation(A,b,max_iterations))
+    jx, je = jacobi(A, b, max_iterations, tol)
+    gx, ge = guassSeidel(A, b, max_iterations, tol)
+    sx, se = SuccesiveOverRelaxation(A,b,max_iterations, tol)
+    print('jacobi converged after', len(je), 'iterations')
+    print('jacobi matrix: ', jx)
+    print('guass-seidel converged after', len(ge), 'iterations')
+    print('guass-seidel matrix: ', gx)
+    print('SOR with w=1.05 converged after', len(se), 'iterations')
+    print('SOR w=1.05 matrix: ', sx)
 main()
