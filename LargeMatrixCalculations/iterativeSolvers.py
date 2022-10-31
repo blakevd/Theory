@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib as plt
+import time
 
 # reads in sparse matrix and stores as a 2D array
 def readMatrixFile(file, matrix_size):
@@ -24,6 +25,7 @@ def jacobi(A, b, K, tolerance):
     n = len(b)
     x = np.zeros_like(b)
     e = []
+    t = time.time()
     for k in range(K): # very very slow method for large matrix
         prev_x = x.copy()
         for i in range(n):
@@ -38,13 +40,13 @@ def jacobi(A, b, K, tolerance):
         #print(error)
         if error < tolerance:
             break
-    return x, e
+    return x, e, time.time() - t
 
 def guassSeidel(A, b, K, tolerance):
     n = len(b)
     x = np.zeros_like(b)
     e = []
-
+    t = time.time()
     for k in range(K):
         prev_x = x.copy()
         for i in range(n):
@@ -60,13 +62,14 @@ def guassSeidel(A, b, K, tolerance):
         #print(error)
         if error < tolerance:
             break
-    return x, e
+    return x, e, time.time() - t
 
 def SuccesiveOverRelaxation(A, b, K, tolerance):
     n = len(b)
     x = np.zeros_like(b)
     w = 1.05
     e = []
+    t = time.time()
     for k in range(K):
         prev_x = x.copy()
         for i in range(n):
@@ -81,23 +84,23 @@ def SuccesiveOverRelaxation(A, b, K, tolerance):
         #print(error)
         if error < tolerance:
             break
-    return x, e
+    return x, e, time.time() - t
 
 def main():
     A = readMatrixFile("A1.matrix", 793)
     b = readRHSFile("b1.rhs", 793)
     max_iterations = 100
-    tol = 0.1 # beause my pc is too slow
+    tol = 0.000001 # beause my pc is too slow
     #A = np.array([[4.0, -2.0, 1.0], [1.0, -3.0, 2.0], [-1.0, 2.0, 6.0]])
     #b = [1.0, 2.0, 3.0]
 
-    jx, je = jacobi(A, b, max_iterations, tol)
-    gx, ge = guassSeidel(A, b, max_iterations, tol)
-    sx, se = SuccesiveOverRelaxation(A,b,max_iterations, tol)
-    print('jacobi converged after', len(je), 'iterations')
+    jx, je, jt = jacobi(A, b, max_iterations, tol)
+    gx, ge, gt = guassSeidel(A, b, max_iterations, tol)
+    sx, se, st = SuccesiveOverRelaxation(A,b,max_iterations, tol)
+    print('jacobi converged after', len(je), 'iterations and', jt, ' seconds')
     print('jacobi matrix: ', jx)
-    print('guass-seidel converged after', len(ge), 'iterations')
+    print('guass-seidel converged after', len(ge), 'iterations and', gt, ' seconds')
     print('guass-seidel matrix: ', gx)
-    print('SOR with w=1.05 converged after', len(se), 'iterations')
+    print('SOR with w=1.05 converged after', len(se), 'iterations and', st, ' seconds')
     print('SOR w=1.05 matrix: ', sx)
 main()
