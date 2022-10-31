@@ -77,7 +77,7 @@ def SuccesiveOverRelaxation(A, b, K, tolerance):
         e.append(error)
         if error < tolerance:
             break
-    return x
+    return x, e
 
 def main():
     A = readMatrixFile("A1.matrix", 793)
