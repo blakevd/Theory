@@ -35,6 +35,7 @@ def jacobi(A, b, K, tolerance):
         # check tolerance based on https://johnfoster.pge.utexas.edu/numerical-methods-book/LinearAlgebra_IterativeSolvers.html
         error = np.abs(np.linalg.norm(x)) - np.abs(np.linalg.norm(prev_x))
         e.append(error)
+        #print(error)
         if error < tolerance:
             break
     return x, e
@@ -56,6 +57,7 @@ def guassSeidel(A, b, K, tolerance):
             x[i] = (b[i]-sum) / float(A[i][i])
         error = np.abs(np.linalg.norm(x)) - np.abs(np.linalg.norm(prev_x))
         e.append(error)
+        #print(error)
         if error < tolerance:
             break
     return x, e
@@ -69,10 +71,11 @@ def SuccesiveOverRelaxation(A, b, K, tolerance):
         prev_x = x.copy()
         for i in range(n):
             sum = 0.0
-            for j in range(n):
-                if j != i:
-                    sum += np.dot(A[i][j], x[j])
-            x[i] = x[i] + w*((b[i]-sum) / float(A[i][i])) - x[i]
+            for j in range(i - 1):
+                sum += np.dot(A[i][j], x[j])
+            for j in range(i+1, n):
+                sum += np.dot(A[i][j], x[j])
+            x[i] = w*((b[i]-sum) / float(A[i][i]))
         error = np.abs(np.linalg.norm(x)) - np.abs(np.linalg.norm(prev_x))
         e.append(error)
         print(error)
@@ -83,13 +86,13 @@ def SuccesiveOverRelaxation(A, b, K, tolerance):
 def main():
     A = readMatrixFile("A1.matrix", 793)
     b = readRHSFile("b1.rhs", 793)
-    max_iterations = 250
-    tol = 1e-5
+    max_iterations = 100
+    tol = 0.1 # beause my pc is too slow
     #A = np.array([[4.0, -2.0, 1.0], [1.0, -3.0, 2.0], [-1.0, 2.0, 6.0]])
     #b = [1.0, 2.0, 3.0]
 
-   # jx, je = jacobi(A, b, max_iterations, tol)
-   # gx, ge = guassSeidel(A, b, max_iterations, tol)
+    #jx, je = jacobi(A, b, max_iterations, tol)
+    #gx, ge = guassSeidel(A, b, max_iterations, tol)
     sx, se = SuccesiveOverRelaxation(A,b,max_iterations, tol)
     print('jacobi converged after', len(je), 'iterations')
     print('jacobi matrix: ', jx)
