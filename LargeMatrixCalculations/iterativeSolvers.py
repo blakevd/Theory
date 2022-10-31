@@ -33,7 +33,7 @@ def jacobi(A, b, K, tolerance):
                     sum += np.dot(A[i][j], x[j])
             x[i] = (b[i] - sum) / float(A[i][i])
         # check tolerance based on https://johnfoster.pge.utexas.edu/numerical-methods-book/LinearAlgebra_IterativeSolvers.html
-        error = np.abs(np.linalg.norm(x) - np.linalg.norm(prev_x))
+        error = np.abs(np.linalg.norm(x)) - np.abs(np.linalg.norm(prev_x))
         e.append(error)
         if error < tolerance:
             break
@@ -54,7 +54,7 @@ def guassSeidel(A, b, K, tolerance):
                 sum += np.dot(A[i][j], x[j])
                 
             x[i] = (b[i]-sum) / float(A[i][i])
-        error = np.abs(np.linalg.norm(x) - np.linalg.norm(prev_x))
+        error = np.abs(np.linalg.norm(x)) - np.abs(np.linalg.norm(prev_x))
         e.append(error)
         if error < tolerance:
             break
@@ -73,8 +73,9 @@ def SuccesiveOverRelaxation(A, b, K, tolerance):
                 if j != i:
                     sum += np.dot(A[i][j], x[j])
             x[i] = x[i] + w*((b[i]-sum) / float(A[i][i])) - x[i]
-        error = np.abs(np.linalg.norm(x) - np.linalg.norm(prev_x))
+        error = np.abs(np.linalg.norm(x)) - np.abs(np.linalg.norm(prev_x))
         e.append(error)
+        print(error)
         if error < tolerance:
             break
     return x, e
@@ -82,13 +83,13 @@ def SuccesiveOverRelaxation(A, b, K, tolerance):
 def main():
     A = readMatrixFile("A1.matrix", 793)
     b = readRHSFile("b1.rhs", 793)
-    max_iterations = 25
-    tol = 1e-10
+    max_iterations = 250
+    tol = 1e-5
     #A = np.array([[4.0, -2.0, 1.0], [1.0, -3.0, 2.0], [-1.0, 2.0, 6.0]])
     #b = [1.0, 2.0, 3.0]
 
-    jx, je = jacobi(A, b, max_iterations, tol)
-    gx, ge = guassSeidel(A, b, max_iterations, tol)
+   # jx, je = jacobi(A, b, max_iterations, tol)
+   # gx, ge = guassSeidel(A, b, max_iterations, tol)
     sx, se = SuccesiveOverRelaxation(A,b,max_iterations, tol)
     print('jacobi converged after', len(je), 'iterations')
     print('jacobi matrix: ', jx)
