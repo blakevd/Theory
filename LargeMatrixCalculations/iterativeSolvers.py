@@ -78,7 +78,7 @@ def SuccesiveOverRelaxation(A, b, K, tolerance):
             x[i] = w*((b[i]-sum) / float(A[i][i]))
         error = np.abs(np.linalg.norm(x)) - np.abs(np.linalg.norm(prev_x))
         e.append(error)
-        print(error)
+        #print(error)
         if error < tolerance:
             break
     return x, e
@@ -91,8 +91,8 @@ def main():
     #A = np.array([[4.0, -2.0, 1.0], [1.0, -3.0, 2.0], [-1.0, 2.0, 6.0]])
     #b = [1.0, 2.0, 3.0]
 
-    #jx, je = jacobi(A, b, max_iterations, tol)
-    #gx, ge = guassSeidel(A, b, max_iterations, tol)
+    jx, je = jacobi(A, b, max_iterations, tol)
+    gx, ge = guassSeidel(A, b, max_iterations, tol)
     sx, se = SuccesiveOverRelaxation(A,b,max_iterations, tol)
     print('jacobi converged after', len(je), 'iterations')
     print('jacobi matrix: ', jx)
