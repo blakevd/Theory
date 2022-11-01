@@ -48,14 +48,30 @@ def divideSquare(s):
     
     return s0, s1, s2, s3
 
+def divideAndConquor(s, c_radius, list):
+    # square is inside circle if s*sqrt(2) <= radius
+    print(s.side, c_radius)
+    if s.side > c_radius: # square is too big for circle
+        s0, s1, s2, s3 = divideSquare(s)
+        divideAndConquor(s0, c_radius, list)
+        divideAndConquor(s1, c_radius, list)
+        divideAndConquor(s2, c_radius, list)
+        divideAndConquor(s3, c_radius, list)
+    else:
+        list.append(s)
+        print(s)
+        
 def main():
-    r = 2
     center = (0, 0)
+    radius = 2
+    side = np.sqrt(2)*radius
     
-    side = np.sqrt(2)*r
-    points = [(0, 0), (1, 0), (0, 1), (1, 1)]
-    square = Square(side, points)
-    s0,s1,s2,s3 = square.into_fourths()
-    print(s0,s1,s2,s3)
+    # create square around the circle
+    points = [center, (center[0] + side, center[1]), (center[0], center[1] + side), (center[0] + side, center[1] + side)]
+    square = Square(radius*np.sqrt(2), points)
     
-main()
+    list = []
+    divideAndConquor(square, radius, list)
+    return list
+    
+print(main())
