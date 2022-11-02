@@ -16,36 +16,36 @@ class Square:
         return (x, y)
 
 def divideSquare(s):
-    s_side = s.side / 4
-    
+    L = s.side / 2
+    c = s.get_center()
     # bottom left
     p0 = [(0, 0) for i in range(4)]
-    p0[0] = (s.points[0][0], s.points[0][1])
-    p0[1] = (s.points[1][0]/2, s.points[1][1])
-    p0[2] = (s.points[2][0], s.points[2][1]/2)
-    p0[3] = s.get_center()
-    s0 = Square(s_side, p0)
+    p0[0] = (c[0] - L, c[1] - L)
+    p0[1] = (c[0], c[1] - L)
+    p0[2] = (c[0] - L, c[1])
+    p0[3] = c
+    s0 = Square(L, p0)
     
     p1 = [(0, 0) for i in range(4)]
-    p1[0] = (s.points[1][0]/2, s.points[1][1])
-    p1[1] = (s.points[1][0], s.points[1][1])
-    p1[2] = s.get_center()
-    p1[3] = (s.points[3][0], s.points[3][1]/2)
-    s1 = Square(s_side, p1)
+    p1[0] = (c[0], c[1] - L)
+    p1[1] = (c[0] + L, c[1] - L)
+    p1[2] = c
+    p1[3] = (c[0] + L, c[1])
+    s1 = Square(L, p1)
     
     p2 = [(0, 0) for i in range(4)]
-    p2[0] = (s.points[2][0], s.points[2][1]/2)
-    p2[1] = s.get_center()
-    p2[2] = (s.points[2][0], s.points[2][1])
-    p2[3] = (s.points[3][0]/2, s.points[3][1])
-    s2 = Square(s_side, p2)
+    p2[0] = (c[0] - L, c[1])
+    p2[1] = c
+    p2[2] = (c[0] - L, c[1] + L)
+    p2[3] = (c[0], c[1] + L)
+    s2 = Square(L, p2)
     
     p3 = [(0, 0) for i in range(4)]
-    p3[0] = s.get_center()
-    p3[1] = (s.points[1][0], s.points[3][1]/2)
-    p3[2] = (s.points[3][0], s.points[3][1])
-    p3[3] = (s.points[3][0]/2, s.points[3][1])
-    s3 = Square(s_side, p3)
+    p3[0] = c
+    p3[1] = (c[0] + L, c[1])
+    p3[2] = (c[0], c[1] + L)
+    p3[3] = (c[0] + L, c[1] + L)
+    s3 = Square(L, p3)
     
     return s0, s1, s2, s3
 
@@ -64,19 +64,15 @@ def isCloseToCircle(s_center, r):
     #print(dx, dy)
     return (dx <= tol and dx >= -tol) or (dy <= tol and dy >= -tol)
 
-def divideAndConquor(s, center, radius, list):
-    if(isInCircle(s.points[0], center, radius)): # if square is inside keep going otherwise ignore and throw away
-        # if top right is inside then stop recursing
-        #print(isInCircle(s.points[3], center, radius), isCloseToCircle(s.get_center(), radius))
-        if(isInCircle(s.points[3], center, radius) or isCloseToCircle(s.get_center(), radius)):
-            list.append(s)
-            return
-        else:
+def divideAndConquor(s, center, radius, list, i):
+    i+=1
+    list.append(s)
+    if i <= 4:
             s0, s1, s2, s3 = divideSquare(s)
-            divideAndConquor(s0, center, radius, list)
-            divideAndConquor(s1, center, radius, list)
-            divideAndConquor(s2, center, radius, list)
-            divideAndConquor(s3, center, radius, list)
+            divideAndConquor(s0, center, radius, list,i)
+            divideAndConquor(s1, center, radius, list,i)
+            divideAndConquor(s2, center, radius, list,i)
+            divideAndConquor(s3, center, radius, list,i)
     
     return 
             
@@ -91,10 +87,11 @@ def main():
     square = Square(radius, points)
     
     list = []
-    divideAndConquor(square, center, radius, list)
+    divideAndConquor(square, center, radius, list,0)
     fig, ax = plt.subplots(1)
     ax.set_xlim(left = 0, right = 2)
     ax.set_ylim(bottom = 0, top = 2)
+
     for s in list:
         ax.add_patch(Rectangle(s.points[0], s.side, s.side, color='purple', alpha=0.1,))
     
