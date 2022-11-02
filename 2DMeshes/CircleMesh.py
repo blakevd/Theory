@@ -147,4 +147,4 @@ def main():
     
     plt.show()
     
-print(main())
+main()
