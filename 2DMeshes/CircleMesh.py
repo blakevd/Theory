@@ -15,6 +15,21 @@ class Square:
         x = (self.points[0][0] + self.points[3][0]) / 2
         y = (self.points[0][1] + self.points[3][1]) / 2
         return (x, y)
+    
+    def invert_x(self, p):
+        x = p[0]
+        y = p[1]
+        return (-x - self.side, y)
+    
+    def invert_y(self, p):
+        x = p[0]
+        y = p[1]
+        return (x, -y - self.side)
+    
+    def invert_xy(self, p):
+        x = p[0]
+        y = p[1]
+        return (-x - self.side, -y - self.side)
 
 def divideSquare(s):
     L = s.side / 2
@@ -105,11 +120,30 @@ def main():
     fig, ax = plt.subplots(1)
     ax.set_xlim(left = 0, right = 2)
     ax.set_ylim(bottom = 0, top = 2)
-
+    ax.set_title('top right view of circle mesh')
     ax.add_patch(Circle(center, radius, color='black', alpha=0.1))
     for s in list:
         if isInCircle(s.points[0], radius): # only add the inside things to the graph
             ax.add_patch(Rectangle(s.points[0], s.side, s.side, color='blue', alpha=0.1,))
+    
+    #plt.figure()
+    fig, ax = plt.subplots(1)
+    ax.set_xlim(-2, 2)
+    ax.set_ylim(-2, 2)
+    ax.set_title('View of full mesh(top right is reflected across x and y)')
+    ax.add_patch(Circle(center, radius, color='black', alpha=0.1))
+    for i in range(4):
+        for s in list:
+            if isInCircle(s.points[0], radius): # only add the inside things to the graph
+                p = s.points[0]
+                if i == 3:
+                    p = s.invert_xy(s.points[0])
+                elif i == 2:
+                    p = s.invert_x(s.points[0])
+                elif i == 1:
+                    p = s.invert_y(s.points[0])
+                
+                ax.add_patch(Rectangle(p, s.side, s.side, color='blue', alpha=0.1,))
     
     plt.show()
     
