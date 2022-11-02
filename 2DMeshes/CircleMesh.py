@@ -1,5 +1,6 @@
+import matplotlib.pyplot as plt
 import numpy as np
-from pkg_resources import parse_version
+from matplotlib.patches import Rectangle
 
 class Square:
     # points: [2]-------[3]
@@ -48,30 +49,55 @@ def divideSquare(s):
     
     return s0, s1, s2, s3
 
-def divideAndConquor(s, c_radius, list):
-    # square is inside circle if s*sqrt(2) <= radius
-    print(s.side, c_radius)
-    if s.side > c_radius: # square is too big for circle
-        s0, s1, s2, s3 = divideSquare(s)
-        divideAndConquor(s0, c_radius, list)
-        divideAndConquor(s1, c_radius, list)
-        divideAndConquor(s2, c_radius, list)
-        divideAndConquor(s3, c_radius, list)
-    else:
-        list.append(s)
-        print(s)
+def isInCircle(points, center, r):
+    dx = np.abs(points[0] - center[0])
+    dy = np.abs(points[1] - center[1])
+    if (dx > r or dy > r):
+        return False
+    
+    return (dx*dx + dy*dy <= (r*r))
+
+def isCloseToCircle(s_center, r):
+    tol = 0.1
+    dx = s_center[0]
+    dy = s_center[1]
+    #print(dx, dy)
+    return (dx <= tol and dx >= -tol) or (dy <= tol and dy >= -tol)
+
+def divideAndConquor(s, center, radius, list):
+    if(isInCircle(s.points[0], center, radius)): # if square is inside keep going otherwise ignore and throw away
+        # if top right is inside then stop recursing
+        #print(isInCircle(s.points[3], center, radius), isCloseToCircle(s.get_center(), radius))
+        if(isInCircle(s.points[3], center, radius) or isCloseToCircle(s.get_center(), radius)):
+            list.append(s)
+            return
+        else:
+            s0, s1, s2, s3 = divideSquare(s)
+            divideAndConquor(s0, center, radius, list)
+            divideAndConquor(s1, center, radius, list)
+            divideAndConquor(s2, center, radius, list)
+            divideAndConquor(s3, center, radius, list)
+    
+    return 
+            
         
 def main():
     center = (0, 0)
     radius = 2
-    side = np.sqrt(2)*radius
+    side = radius
     
     # create square around the circle
     points = [center, (center[0] + side, center[1]), (center[0], center[1] + side), (center[0] + side, center[1] + side)]
-    square = Square(radius*np.sqrt(2), points)
+    square = Square(radius, points)
     
     list = []
-    divideAndConquor(square, radius, list)
-    return list
+    divideAndConquor(square, center, radius, list)
+    fig, ax = plt.subplots(1)
+    ax.set_xlim(left = 0, right = 2)
+    ax.set_ylim(bottom = 0, top = 2)
+    for s in list:
+        ax.add_patch(Rectangle(s.points[0], s.side, s.side, color='purple', alpha=0.1,))
+    
+    plt.show()
     
 print(main())
