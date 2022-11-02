@@ -18,22 +18,34 @@ def input(name):
     return points
 
 def addRandomPoints(points):
-    p = points.copy()
-    for i in range(250):
+    p = []
+    while len(p) != 250:
         x = random.uniform(-1, 1)
         y = random.uniform(-1, 1)
-        p = np.append(points, np.array([x, y]))
-    
+        if (np.sqrt(x**2 + y**2) < 1):
+            p.append([x, y])
+        
     return p
 
 def main():
+    # this adds 250 random points then triangulates it
     circle = np.array(input('circle2d-outer.node'))
-    points = addRandomPoints(circle)
-    
-    print(len(circle), len(points))
+    randPoints = np.array(addRandomPoints(circle))
+
+    points = np.vstack((circle, randPoints))
     tri = Delaunay(points)
     plt.triplot(points[:,0], points[:,1], tri.simplices)
     plt.plot(points[:,0], points[:,1], 'o')
+    plt.title('Delaunay triangulation with 250 random points in circle2d-outer')
+    
+    # This just triangulates a mesh
+    plt.figure()
+    circle2 = np.array(input('circle2d.node'))
+    tri = Delaunay(circle2)
+    plt.triplot(circle2[:,0], circle2[:,1], tri.simplices)
+    plt.plot(circle2[:,0], circle2[:,1], 'o')
+    plt.title('Delaunay triangulation mesh of circle2d')
+
     plt.show()
 
 main()
