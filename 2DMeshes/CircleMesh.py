@@ -54,31 +54,35 @@ def isInCircle(points, r):
     dxy = np.sqrt(points[0]**2 + points[1]**2)
     return (dxy < r)
 
-def isCloseToCircle(s_center, r):
-    tol = 0.1
-    dxy = r - np.sqrt(s_center[0]**2 + s_center[1]**2)
-    #print(dx, dy)
-    return (dxy <= tol and dxy >= -tol)
-
 def divideAndConquor(s, parent, center, radius, list, i):
     i+=1
-    if i <= 5:
-        if ():
-            if parent != None and parent in list:
-                list.remove(parent) # remove prev
-            list.append(s) # add to list if we are in circle
-            s0, s1, s2, s3 = divideSquare(s)
-            if(isInCircle(s0.get_center(), radius)):
+    if i <= 4:
+        if(isInCircle(parent.points[3], radius)):
+            # skip squares that are inside circle
+            return
+        else:
+            if i <= 3:
+                if parent in list:
+                    list.remove(parent) # remove prev
+                list.append(s) # add to list if we are in circle
+                s0, s1, s2, s3 = divideSquare(s)
                 divideAndConquor(s0, s, center, radius, list,i)
-            if(isInCircle(s1.get_center(), radius)):
                 divideAndConquor(s1, s, center, radius, list,i)
-            if(isInCircle(s2.get_center(), radius)):
-                divideAndConquor(s2, s, center, radius, list,i)
-            if(isInCircle(s3.get_center(), radius)):
+                divideAndConquor(s2, s, center, radius, list,i)    
                 divideAndConquor(s3, s, center, radius, list,i)
-
-    return 
-            
+            else:
+                if parent in list:
+                    list.remove(parent) # remove prev
+                list.append(s) # add to list if we are in circle
+                s0, s1, s2, s3 = divideSquare(s)
+                if isInCircle(s0.get_center(), radius):
+                    divideAndConquor(s0, s, center, radius, list,i)
+                if isInCircle(s1.get_center(), radius):
+                    divideAndConquor(s1, s, center, radius, list,i)
+                if isInCircle(s2.get_center(), radius):
+                    divideAndConquor(s2, s, center, radius, list,i)
+                if isInCircle(s3.get_center(), radius):
+                    divideAndConquor(s3, s, center, radius, list,i)
         
 def main():
     center = (0, 0)
@@ -103,9 +107,9 @@ def main():
     ax.set_ylim(bottom = 0, top = 2)
 
     ax.add_patch(Circle(center, radius, color='black', alpha=0.1))
-    
     for s in list:
-        ax.add_patch(Rectangle(s.points[0], s.side, s.side, color='blue', alpha=0.1,))
+        if isInCircle(s.points[0], radius): # only add the inside things to the graph
+            ax.add_patch(Rectangle(s.points[0], s.side, s.side, color='blue', alpha=0.1,))
     
     plt.show()
     
